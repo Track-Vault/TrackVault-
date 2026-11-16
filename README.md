@@ -33,7 +33,7 @@
 ---
 
 ## 📖 Sobre o Projeto
-Desenvolvimento de um website que nasceu a partir de uma paixão, voltado para prospecção de produções musicais voltadas para diferentes vertentes de musica.3
+Desenvolvimento de um website que nasceu a partir de uma paixão, voltado para prospecção de produções musicais voltadas para diferentes vertentes de musica
 eletrônica, destinado a auxiliar DJs, produtores e entusiastas a organizarem suas bibliotecas musicais. A aplicação conta com uma API robusta no back-end que se comunica de forma eficiente com um banco de dados relacional e fornece todas as informações para uma interface interativa no front-end.
 
 ---
