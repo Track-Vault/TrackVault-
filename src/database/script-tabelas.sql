@@ -53,3 +53,18 @@ INSERT INTO vertente (nome, descricao) VALUES
 ('Melodic Techno', 'Vertente melódica de Techno'),
 ('Hard Techno', 'Vertente de música eletrônica');
 
+-- Registra cada clique em "Ouvir" no dashboard (alimenta "Tracks em alta" e "Produtores mais acessados")
+CREATE TABLE acesso (
+    id_acesso INT PRIMARY KEY AUTO_INCREMENT,
+    fk_usuario INT NOT NULL,
+    fk_track INT NOT NULL,
+    data_acesso DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_acesso_usuario
+    FOREIGN KEY (fk_usuario)
+    REFERENCES usuario(id_usuario),
+
+    CONSTRAINT fk_acesso_track
+    FOREIGN KEY (fk_track)
+    REFERENCES track(id_track)
+);
