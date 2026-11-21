@@ -16,106 +16,110 @@
     <div class="dashboard-layout">
 
         <!-- Menu lateral fixo com identidade visual da referência -->
-        <aside class="menu-lateral">
+        <div class="menu-lateral">
             <div class="menu-topo">
                 <img src="../assets/logo.png" alt="TrackVault" class="logo-menu">
                 <h1>TRACKVAULT</h1>
             </div>
 
-            <nav class="menu-links">
+            <div class="menu-links">
                 <a href="#" class="item-menu ativo">Dashboard</a>
                 <a href="#" class="item-menu">Minhas Tracks</a>
                 <a href="#" class="item-menu">Descobrir</a>
                 <a href="#" class="item-menu">Analytics</a>
                 <a href="#" class="item-menu">Configurações</a>
-            </nav>
+            </div>
 
             <!-- Mantém o encerramento de sessão existente -->
             <button class="botao-sair" onclick="limparSessao()">Sair</button>
-        </aside>
+        </div>
 
         <!-- Conteúdo principal da dashboard -->
-        <main class="conteudo-dashboard">
-            <header class="cabecalho-dashboard">
-                <h2>Olá, <span id="b_usuario">usuário</span>!</h2>
+        <div class="conteudo-dashboard">
+            <div class="cabecalho-dashboard">
+                <div class="saudacao-linha">
+                    <h2>Olá,</h2>
+                    <div id="b_usuario" class="nome-usuario">usuário</div>
+                    <h2>!</h2>
+                </div>
                 <p>Aqui está um resumo do seu catálogo musical.</p>
-            </header>
+            </div>
 
             <!-- Linha de KPIs obrigatórios -->
-            <section class="grade-kpis">
-                <article class="card-kpi">
-                    <span class="kpi-titulo">Total de Tracks</span>
-                    <strong id="kpi_total_tracks">0</strong>
-                </article>
+            <div class="grade-kpis">
+                <div class="card-kpi">
+                    <p class="kpi-titulo">Total de Tracks</p>
+                    <p id="kpi_total_tracks" class="kpi-valor">0</p>
+                </div>
 
-                <article class="card-kpi">
-                    <span class="kpi-titulo">Vertentes Musicais Mais Ouvidas</span>
-                    <strong id="kpi_total_vertentes">0</strong>
-                </article>
+                <div class="card-kpi">
+                    <p class="kpi-titulo">Vertentes Musicais Mais Ouvidas</p>
+                    <p id="kpi_total_vertentes" class="kpi-valor">0</p>
+                </div>
 
-                <article class="card-kpi">
-                    <span class="kpi-titulo">Top Produtores Cadastrados</span>
-                    <strong id="kpi_total_produtores">0</strong>
-                </article>
+                <div class="card-kpi">
+                    <p class="kpi-titulo">Top Produtores Cadastrados</p>
+                    <p id="kpi_total_produtores" class="kpi-valor">0</p>
+                </div>
 
-                <article class="card-kpi">
-                    <span class="kpi-titulo">Suas Tracks Adicionadas no Mês</span>
-                    <strong id="kpi_tracks_mes">0</strong>
-                </article>
-            </section>
+                <div class="card-kpi">
+                    <p class="kpi-titulo">Suas Tracks Adicionadas no Mês</p>
+                    <p id="kpi_tracks_mes" class="kpi-valor">0</p>
+                </div>
+            </div>
 
             <p id="msg_kpis" class="mensagem-vazia"></p>
 
             <!-- Primeira linha de gráficos: barras por vertente e linha de evolução -->
-            <section class="grade-graficos-dupla">
-                <article class="card-grafico">
-                    <h3>Tracks por Vertente</h3>
+            <div class="grade-graficos-dupla">
+                <div class="card-grafico">
+                    <h2>Tracks por Vertente</h2>
                     <!-- Este canvas é a área onde o Chart.js desenha o gráfico de tracks por vertente. -->
                     <div class="area-canvas"><canvas id="grafico_vertentes_bar"></canvas></div>
                     <p id="msg_vertentes" class="mensagem-vazia"></p>
-                </article>
+                </div>
 
-                <article class="card-grafico">
-                    <h3>Evolução do Catálogo</h3>
+                <div class="card-grafico">
+                    <h2>Evolução do Catálogo</h2>
                     <!-- Este canvas é a área onde o Chart.js desenha o gráfico de evolução mensal. -->
                     <div class="area-canvas"><canvas id="grafico_evolucao_linha"></canvas></div>
                     <p id="msg_evolucao" class="mensagem-vazia"></p>
-                </article>
-            </section>
+                </div>
+            </div>
 
             <!-- Segunda linha: top 5 produtores em barras horizontais -->
-            <section class="grade-graficos-unico">
-                <article class="card-grafico">
-                    <h3>Top 5 Produtores</h3>
+            <div class="grade-graficos-unico">
+                <div class="card-grafico">
+                    <h2>Top 5 Produtores</h2>
                     <!-- Este canvas é a área onde o Chart.js desenha o ranking dos produtores. -->
                     <div class="area-canvas"><canvas id="grafico_top_produtores"></canvas></div>
                     <p id="msg_produtores" class="mensagem-vazia"></p>
-                </article>
-            </section>
-        </main>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         // Referências dos gráficos para poder destruir/recriar quando necessário
-        var graficoVertentesBar;
-        var graficoEvolucaoLinha;
-        var graficoTopProdutores;
+        let graficoVertentesBar;
+        let graficoEvolucaoLinha;
+        let graficoTopProdutores;
 
         // Plugin simples para mostrar valores numéricos sobre os pontos/barras
-        var pluginValores = {
+        let pluginValores = {
             id: "pluginValores",
             afterDatasetsDraw: function (chart) {
-                var ctx = chart.ctx;
+                let ctx = chart.ctx;
                 ctx.save();
                 ctx.fillStyle = "#EAF0FF";
                 ctx.font = "bold 12px Arial";
 
-                var meta = chart.getDatasetMeta(0);
-                var dados = chart.data.datasets[0].data;
+                let meta = chart.getDatasetMeta(0);
+                let dados = chart.data.datasets[0].data;
 
-                for (var i = 0; i < meta.data.length; i++) {
-                    var ponto = meta.data[i];
-                    var valor = dados[i];
+                for (let i = 0; i < meta.data.length; i++) {
+                    let ponto = meta.data[i];
+                    let valor = dados[i];
 
                     if (chart.config.type == "line") {
                         ctx.fillText(valor, ponto.x - 6, ponto.y - 12);
@@ -130,35 +134,38 @@
             }
         };
 
-        // Esta função centraliza as chamadas da API da dashboard
-        function buscarJSON(url) {
-            return fetch(url, { cache: "no-store" }).then(function (resposta) {
-                if (!resposta.ok) {
-                    throw new Error("Erro em " + url + " (" + resposta.status + ")");
-                }
-                return resposta.json();
-            });
-        }
-
-        // Esta função recebe os dados da API e atualiza os quatro KPIs.
-        function atualizarKPIs(resumo) {
-            document.getElementById("kpi_total_tracks").innerHTML = resumo.totalTracks || 0;
-            document.getElementById("kpi_total_vertentes").innerHTML = resumo.totalVertentes || 0;
-            document.getElementById("kpi_total_produtores").innerHTML = resumo.totalProdutores || 0;
-            document.getElementById("kpi_tracks_mes").innerHTML = resumo.tracksMesAtual || 0;
+        // Busca da API em estilo simples com .then/.catch.
+        // Em caso de erro, chama a função de erro específica de cada bloco.
+        function buscarJSON(url, aoSucesso, aoErro) {
+            fetch(url, { cache: "no-store" })
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json().then(function (dados) {
+                            aoSucesso(dados);
+                        });
+                    } else {
+                        aoErro();
+                    }
+                })
+                .catch(function (erro) {
+                    console.log("Erro em " + url + ":", erro);
+                    aoErro();
+                });
         }
 
         // Este gráfico de barras compara a quantidade de tracks cadastradas em cada vertente musical.
         function montarGraficoVertentes(lista) {
             if (!lista || lista.length == 0) {
-                document.getElementById("msg_vertentes").innerHTML = "Sem dados de vertentes no momento.";
+                msg_vertentes.innerHTML = "Sem dados de vertentes no momento.";
                 return;
             }
 
-            var labels = [];
-            var valores = [];
+            msg_vertentes.innerHTML = "";
 
-            for (var i = 0; i < lista.length; i++) {
+            let labels = [];
+            let valores = [];
+
+            for (let i = 0; i < lista.length; i++) {
                 labels.push(lista[i].nome);
                 valores.push(Number(lista[i].total));
             }
@@ -167,8 +174,8 @@
                 graficoVertentesBar.destroy();
             }
 
-            var ctx = document.getElementById("grafico_vertentes_bar").getContext("2d");
-            var gradienteRoxo = ctx.createLinearGradient(0, 0, 0, 260);
+            let ctx = grafico_vertentes_bar.getContext("2d");
+            let gradienteRoxo = ctx.createLinearGradient(0, 0, 0, 260);
             gradienteRoxo.addColorStop(0, "#B35CFF");
             gradienteRoxo.addColorStop(1, "#7A2CFF");
 
@@ -207,28 +214,30 @@
         // Este gráfico de linha apresenta a evolução mensal dos novos cadastros de tracks no catálogo.
         function montarGraficoEvolucao(lista) {
             if (!lista || lista.length == 0) {
-                document.getElementById("msg_evolucao").innerHTML = "Sem dados mensais no momento.";
+                msg_evolucao.innerHTML = "Sem dados mensais no momento.";
                 return;
             }
 
-            var mesesPt = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-            var mapa = {};
+            msg_evolucao.innerHTML = "";
 
-            for (var i = 0; i < lista.length; i++) {
-                var chave = lista[i].ano + "-" + lista[i].mes;
+            let mesesPt = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+            let mapa = {};
+
+            for (let i = 0; i < lista.length; i++) {
+                let chave = lista[i].ano + "-" + lista[i].mes;
                 mapa[chave] = Number(lista[i].total);
             }
 
             // Monta cronologicamente os últimos 6 meses, mesmo se algum mês vier sem registro
-            var labels = [];
-            var valores = [];
-            var hoje = new Date();
+            let labels = [];
+            let valores = [];
+            let hoje = new Date();
 
-            for (var j = 5; j >= 0; j--) {
-                var d = new Date(hoje.getFullYear(), hoje.getMonth() - j, 1);
-                var ano = d.getFullYear();
-                var mes = d.getMonth() + 1;
-                var chaveMes = ano + "-" + mes;
+            for (let j = 5; j >= 0; j--) {
+                let d = new Date(hoje.getFullYear(), hoje.getMonth() - j, 1);
+                let ano = d.getFullYear();
+                let mes = d.getMonth() + 1;
+                let chaveMes = ano + "-" + mes;
                 labels.push(mesesPt[d.getMonth()]);
                 valores.push(mapa[chaveMes] || 0);
             }
@@ -237,8 +246,8 @@
                 graficoEvolucaoLinha.destroy();
             }
 
-            var ctx = document.getElementById("grafico_evolucao_linha").getContext("2d");
-            var gradienteCiano = ctx.createLinearGradient(0, 0, 0, 260);
+            let ctx = grafico_evolucao_linha.getContext("2d");
+            let gradienteCiano = ctx.createLinearGradient(0, 0, 0, 260);
             gradienteCiano.addColorStop(0, "rgba(0, 229, 255, 0.28)");
             gradienteCiano.addColorStop(1, "rgba(0, 229, 255, 0)");
 
@@ -282,14 +291,16 @@
         // Este gráfico identifica os cinco produtores com maior quantidade de tracks cadastradas.
         function montarGraficoTopProdutores(lista) {
             if (!lista || lista.length == 0) {
-                document.getElementById("msg_produtores").innerHTML = "Sem produtores cadastrados para ranking.";
+                msg_produtores.innerHTML = "Sem produtores cadastrados para ranking.";
                 return;
             }
 
-            var labels = [];
-            var valores = [];
+            msg_produtores.innerHTML = "";
 
-            for (var i = 0; i < lista.length; i++) {
+            let labels = [];
+            let valores = [];
+
+            for (let i = 0; i < lista.length; i++) {
                 labels.push(lista[i].nome);
                 valores.push(Number(lista[i].total));
             }
@@ -298,7 +309,7 @@
                 graficoTopProdutores.destroy();
             }
 
-            var ctx = document.getElementById("grafico_top_produtores").getContext("2d");
+            let ctx = grafico_top_produtores.getContext("2d");
             graficoTopProdutores = new Chart(ctx, {
                 type: "bar",
                 data: {
@@ -333,47 +344,57 @@
         }
 
         // Função principal: busca os dados do back-end e atualiza toda a dashboard
-        // Usamos allSettled para não bloquear tudo quando apenas um endpoint falhar.
         function carregarDashboardAnalitica() {
-            Promise.allSettled([
-                buscarJSON("/painel/resumo"),
-                buscarJSON("/painel/por-vertente"),
-                buscarJSON("/painel/evolucao-catalogo"),
-                buscarJSON("/painel/top-produtores")
-            ]).then(function (respostas) {
-                // KPIs
-                if (respostas[0].status === "fulfilled") {
-                    atualizarKPIs(respostas[0].value || {});
-                } else {
-                    console.log("Erro no resumo:", respostas[0].reason);
-                    document.getElementById("msg_kpis").innerHTML = "Não foi possível carregar os indicadores agora.";
+            buscarJSON(
+                "/painel/resumo",
+                function (dados) {
+                    atualizarKPIs(dados || {});
+                },
+                function () {
+                    msg_kpis.innerHTML = "Não foi possível carregar os indicadores agora.";
                 }
+            );
 
-                // Gráfico 1: barras por vertente
-                if (respostas[1].status === "fulfilled") {
-                    montarGraficoVertentes(respostas[1].value || []);
-                } else {
-                    console.log("Erro em por-vertente:", respostas[1].reason);
-                    document.getElementById("msg_vertentes").innerHTML = "Erro ao carregar o gráfico de vertentes.";
+            buscarJSON(
+                "/painel/por-vertente",
+                function (dados) {
+                    montarGraficoVertentes(dados || []);
+                },
+                function () {
+                    msg_vertentes.innerHTML = "Erro ao carregar o gráfico de vertentes.";
                 }
+            );
 
-                // Gráfico 2: evolução mensal
-                if (respostas[2].status === "fulfilled") {
-                    montarGraficoEvolucao(respostas[2].value || []);
-                } else {
-                    console.log("Erro em evolucao-catalogo:", respostas[2].reason);
-                    document.getElementById("msg_evolucao").innerHTML = "Erro ao carregar a evolução do catálogo.";
+            buscarJSON(
+                "/painel/evolucao-catalogo",
+                function (dados) {
+                    montarGraficoEvolucao(dados || []);
+                },
+                function () {
+                    msg_evolucao.innerHTML = "Erro ao carregar a evolução do catálogo.";
                 }
+            );
 
-                // Gráfico 3: top produtores
-                if (respostas[3].status === "fulfilled") {
-                    montarGraficoTopProdutores(respostas[3].value || []);
-                } else {
-                    console.log("Erro em top-produtores:", respostas[3].reason);
-                    document.getElementById("msg_produtores").innerHTML = "Erro ao carregar o ranking de produtores.";
+            buscarJSON(
+                "/painel/top-produtores",
+                function (dados) {
+                    montarGraficoTopProdutores(dados || []);
+                },
+                function () {
+                    msg_produtores.innerHTML = "Erro ao carregar o ranking de produtores.";
                 }
-            });
+            );
         }
+
+        // Limpa a mensagem de erro dos KPIs quando eles carregam.
+        function atualizarKPIs(resumo) {
+            msg_kpis.innerHTML = "";
+            kpi_total_tracks.innerHTML = resumo.totalTracks || 0;
+            kpi_total_vertentes.innerHTML = resumo.totalVertentes || 0;
+            kpi_total_produtores.innerHTML = resumo.totalProdutores || 0;
+            kpi_tracks_mes.innerHTML = resumo.tracksMesAtual || 0;
+        }
+
     </script>
 </body>
 

@@ -400,8 +400,8 @@ body::before {
 
 /* Espaço visual da seção "Sobre Nós" */
 .espaco-sobre { /* Seção institucional intermediária (globo + área de texto) */
-    min-height: 900px;
-    padding: 28px 4.5% 34px;
+    min-height: 560px; /* aqui reduzimos o espaço vertical da seção */
+    padding: 18px 4.5% 22px; /* aqui diminuímos o padding vertical da seção */
     display: grid;
     grid-template-columns: 50% 50%;
     align-items: center;
@@ -422,8 +422,8 @@ body::before {
 /* Imagem principal do globo sem deformação */
 .espaco-sobre-globo img { /* Imagem globoIndex dentro da coluna esquerda */
     width: 100%;
-    max-width: 780px;        /* Tamanho da imagem globo terretre na tela index */
-    max-height: 430px;
+    max-width: 900px; /* aqui aumentamos o tamanho máximo do globo */
+    max-height: 480px; /* aqui ajustamos a altura máxima do globo */
     height: 100%;
     object-fit: contain;
     object-position: center;
@@ -435,7 +435,7 @@ body::before {
 /* Área reservada para texto institucional */
 .espaco-sobre-conteudo { /* Coluna direita da seção (conteúdo institucional) */
     min-height: 260px;
-    border: 1px dashed rgba(124, 149, 210, 0.42);
+    border: 1px solid rgba(138, 96, 255, 0.42); /* aqui trocamos para borda sólida fina e discreta */
     border-radius: 14px;
     padding: 22px 24px;
     background: rgba(10, 16, 38, 0.45);
@@ -445,11 +445,39 @@ body::before {
     gap: 10px;
 }
 
+.destaque-mercado { /* aqui criamos a classe do destaque pequeno de mercado */
+    display: inline-block; /* aqui deixamos o destaque no tamanho do conteúdo */
+    width: fit-content; /* aqui evitamos que o destaque ocupe a largura toda */
+    font-size: 14px; /* aqui está o tamanho pequeno do texto do destaque */
+    font-weight: 600; /* aqui aumentamos levemente o peso para dar leitura */
+    color: #dff7ff; /* aqui usamos um tom claro no mesmo estilo da seção */
+    padding: 6px 10px; /* aqui aplicamos um espaçamento curto dentro do destaque */
+    border-radius: 999px; /* aqui arredondamos o destaque para visual de selo */
+    border: 1px solid rgba(145, 92, 255, 0.65); /* aqui usamos borda roxa no padrão visual */
+    background: rgba(12, 22, 48, 0.62); /* aqui usamos fundo escuro translúcido */
+    box-shadow: 0 0 12px rgba(0, 217, 255, 0.18); /* aqui adicionamos brilho ciano suave */
+}
+
+.ods-icones { /* aqui criamos a linha dos ícones das ODS */
+    display: flex; /* aqui deixamos os ícones lado a lado */
+    align-items: center; /* aqui alinhamos os ícones no centro vertical */
+    gap: 10px; /* aqui colocamos espaço entre os ícones */
+    margin-top: 6px; /* aqui damos um respiro acima dos ícones */
+}
+
+.ods-icone { /* aqui definimos o tamanho pequeno de cada ícone ODS */
+    width: 48px; /* aqui está a largura do ícone */
+    height: 48px; /* aqui está a altura do ícone */
+    border-radius: 6px; /* aqui arredondamos levemente os cantos dos ícones */
+}
+
 /* Placeholder do título da seção */
 .espaco-sobre-conteudo h2 {
     font-family: 'Orbitron', Arial, sans-serif;
     font-weight: 700;
-    font-size: clamp(20px, 2.1vw, 30px);
+    font-size: clamp(30px, 3.4vw, 46px); /* aqui aumentamos o tamanho do título da seção */
+    line-height: 1.16; /* aqui ajustamos a altura da linha para leitura em 2 linhas */
+    max-width: 520px; /* aqui limitamos a largura para o título quebrar em duas linhas */
     color: #dff4ff;
 }
 
@@ -661,18 +689,28 @@ body::before {
         text-align: center;
         gap: 18px;
         min-height: 0;
-        padding: 22px 14px 30px;
+        padding: 16px 14px 24px; /* aqui ajustamos o padding da seção no tablet */
     }
 
     .espaco-sobre-globo img { /* Imagem principal centralizada em telas menores */
-        width: min(95%, 560px);
-        max-height: none;
+        width: min(96%, 640px); /* aqui mantemos o globo grande também no tablet */
+        max-height: 430px; /* aqui limitamos a altura do globo no tablet */
         height: auto;
     }
 
     .espaco-sobre-conteudo { /* Área de texto abaixo da imagem em telas menores */
         width: min(100%, 620px);
-        min-height: 220px;
+        min-height: 0; /* aqui removemos altura mínima fixa para evitar espaço vazio */
+        padding: 18px; /* aqui ajustamos o padding interno do conteúdo no tablet */
+    }
+
+    .espaco-sobre-conteudo h2 { /* aqui ajustamos o tamanho do título no tablet */
+        max-width: 100%; /* aqui liberamos largura total do título no tablet */
+        font-size: clamp(28px, 5vw, 38px); /* aqui mantemos o título grande sem estourar a tela */
+    }
+
+    .ods-icones { /* aqui centralizamos os ícones ODS no tablet */
+        justify-content: center; /* aqui centralizamos os ícones no conteúdo */
     }
 
     .blocos-institucional {
@@ -747,16 +785,30 @@ body::before {
     }
 
     .espaco-sobre { /* Seção institucional intermediária em celular */
-        padding: 14px 14px 22px;
+        padding: 12px 14px 18px; /* aqui reduzimos o padding da seção no celular */
     }
 
     .espaco-sobre-globo img { /* Imagem ajustada para celular */
-        width: min(96%, 420px);
+        width: min(100%, 460px); /* aqui aumentamos um pouco o globo no celular */
+        max-height: 320px; /* aqui limitamos a altura do globo no celular */
     }
 
     .espaco-sobre-conteudo { /* Área de texto ajustada para celular */
-        min-height: 160px;
-        padding: 14px;
+        min-height: 0; /* aqui removemos altura mínima para evitar área vazia */
+        padding: 14px; /* aqui mantemos um padding confortável no conteúdo */
+    }
+
+    .espaco-sobre-conteudo h2 { /* aqui ajustamos o título para caber bem no celular */
+        font-size: clamp(24px, 8vw, 32px); /* aqui reduzimos o tamanho do título no celular */
+    }
+
+    .ods-icones { /* aqui mantemos os ícones centralizados no celular */
+        justify-content: center; /* aqui centralizamos a linha de ícones no celular */
+    }
+
+    .ods-icone { /* aqui ajustamos o tamanho dos ícones ODS no celular */
+        width: 44px; /* aqui está a largura do ícone no celular */
+        height: 44px; /* aqui está a altura do ícone no celular */
     }
 
     .rodape-home {

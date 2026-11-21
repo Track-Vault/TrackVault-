@@ -1,7 +1,7 @@
-var express = require("express");
-var router = express.Router();
+let express = require("express");
+let router = express.Router();
 
-var painelController = require("../controllers/painelController");
+let painelController = require("../controllers/painelController");
 
 // Rotas do dashboard (todas começam com /painel, definido no app.js)
 

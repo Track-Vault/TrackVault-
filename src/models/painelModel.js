@@ -1,21 +1,46 @@
-var database = require("../database/config");
+let database = require("../database/config");
 
-// KPIs: 4 contagens em uma só consulta (COUNT = quantidade de linhas)
-function resumo() {
-    var instrucaoSql = `
-        SELECT
-            (SELECT COUNT(*) FROM track) AS totalTracks,
-            (SELECT COUNT(*) FROM track WHERE MONTH(data_cadastro) = MONTH(CURRENT_DATE())
-                                    AND YEAR(data_cadastro) = YEAR(CURRENT_DATE())) AS tracksMesAtual,
-            (SELECT COUNT(*) FROM produtor) AS totalProdutores,
-            (SELECT COUNT(*) FROM vertente) AS totalVertentes;
+// KPI 1: total de tracks no catálogo.
+function totalTracks() {
+    let instrucaoSql = `
+        SELECT COUNT(*) AS totalTracks
+        FROM track;
+    `;
+    return database.executar(instrucaoSql);
+}
+
+// KPI 4: tracks cadastradas no mês atual.
+function tracksMesAtual() {
+    let instrucaoSql = `
+        SELECT COUNT(*) AS tracksMesAtual
+        FROM track
+        WHERE MONTH(data_cadastro) = MONTH(CURRENT_DATE())
+          AND YEAR(data_cadastro) = YEAR(CURRENT_DATE());
+    `;
+    return database.executar(instrucaoSql);
+}
+
+// KPI 3: total de produtores.
+function totalProdutores() {
+    let instrucaoSql = `
+        SELECT COUNT(*) AS totalProdutores
+        FROM produtor;
+    `;
+    return database.executar(instrucaoSql);
+}
+
+// KPI 2: total de vertentes.
+function totalVertentes() {
+    let instrucaoSql = `
+        SELECT COUNT(*) AS totalVertentes
+        FROM vertente;
     `;
     return database.executar(instrucaoSql);
 }
 
 // Tracks mais acessadas nos últimos 7 dias (JOIN junta as tabelas; GROUP BY agrupa por track)
 function emAlta() {
-    var instrucaoSql = `
+    let instrucaoSql = `
         SELECT t.id_track AS id, t.nome AS track, p.nome AS produtor, t.link,
                COUNT(a.id_acesso) AS acessos
         FROM acesso a
@@ -31,7 +56,7 @@ function emAlta() {
 
 // Últimas tracks cadastradas (mais recente primeiro)
 function ultimas() {
-    var instrucaoSql = `
+    let instrucaoSql = `
         SELECT t.id_track AS id, t.nome AS track, p.nome AS produtor, v.nome AS vertente,
                t.link, t.data_cadastro
         FROM track t
@@ -45,7 +70,7 @@ function ultimas() {
 
 // Produtores com mais tracks no catálogo
 function topProdutores() {
-    var instrucaoSql = `
+    let instrucaoSql = `
         SELECT p.nome, COUNT(t.id_track) AS total
         FROM produtor p
         JOIN track t ON t.fk_produtor = p.id_produtor
@@ -58,7 +83,7 @@ function topProdutores() {
 
 // Produtores mais acessados nos últimos 7 dias
 function produtoresAcessados() {
-    var instrucaoSql = `
+    let instrucaoSql = `
         SELECT p.nome, COUNT(a.id_acesso) AS total
         FROM acesso a
         JOIN track t ON t.id_track = a.fk_track
@@ -73,7 +98,7 @@ function produtoresAcessados() {
 
 // Quantidade de tracks por vertente (para o gráfico de barras)
 function porVertente() {
-    var instrucaoSql = `
+    let instrucaoSql = `
         SELECT v.nome, COUNT(t.id_track) AS total
         FROM vertente v
         JOIN track t ON t.fk_vertente = v.id_vertente
@@ -85,7 +110,7 @@ function porVertente() {
 
 // Evolução do catálogo: conta quantas tracks foram cadastradas em cada mês (últimos 6 meses)
 function evolucaoCatalogo() {
-    var instrucaoSql = `
+    let instrucaoSql = `
         SELECT
             YEAR(data_cadastro) AS ano,
             MONTH(data_cadastro) AS mes,
@@ -100,14 +125,17 @@ function evolucaoCatalogo() {
 
 // Registra o clique em "Ouvir". Os ids já foram validados como números no controller
 function acessar(idUsuario, idTrack) {
-    var instrucaoSql = `
+    let instrucaoSql = `
         INSERT INTO acesso (fk_usuario, fk_track) VALUES (${idUsuario}, ${idTrack});
     `;
     return database.executar(instrucaoSql);
 }
 
 module.exports = {
-    resumo,
+    totalTracks,
+    tracksMesAtual,
+    totalProdutores,
+    totalVertentes,
     emAlta,
     ultimas,
     topProdutores,

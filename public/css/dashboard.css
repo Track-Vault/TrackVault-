@@ -144,6 +144,19 @@ body {
     font-weight: 700;
 }
 
+/* Linha da saudação (Olá, nome!) */
+.saudacao-linha {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+/* Nome do usuário vindo da sessão */
+.nome-usuario {
+    font-size: 42px;
+    font-weight: 700;
+}
+
 .cabecalho-dashboard p {
     margin-top: 4px;
     color: var(--texto-secundario);
@@ -174,7 +187,7 @@ body {
 }
 
 /* Valor numérico do KPI */
-.card-kpi strong {
+.kpi-valor {
     font-size: 46px;
     color: var(--ciano);
 }
@@ -202,7 +215,7 @@ body {
 }
 
 /* Título do gráfico */
-.card-grafico h3 {
+.card-grafico h2 {
     font-size: 28px;
     margin-bottom: 12px;
 }

@@ -133,11 +133,11 @@
         }
       })
       .catch(function (erro) {
-        console.log("#ERRO: " + erro);
+       
+ console.log("#ERRO: " + erro);
         mostrarMensagem(typeof erro == "string" ? erro : "Houve um erro ao tentar realizar o cadastro!");
         finalizarAguardar();
       });
-
     return false;
   }
 
