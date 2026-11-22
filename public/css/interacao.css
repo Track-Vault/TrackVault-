@@ -86,6 +86,129 @@ body.pagina-interacao {
     box-shadow:
         0 0 0 1px rgba(0, 229, 255, 0.12),
         0 0 24px rgba(120, 68, 255, 0.32);
+    padding: 18px; /* aqui adicionamos espaçamento interno para o conteúdo Minhas Tracks */
+}
+
+.subtitulo-area { /* aqui estilizamos o texto de apoio abaixo do título MINHAS TRACKS */
+    color: #a9b6d6; /* aqui usamos uma cor suave no padrão da página */
+    margin-top: 6px; /* aqui criamos um espaço pequeno abaixo do título */
+    margin-bottom: 14px; /* aqui criamos espaço antes do formulário */
+}
+
+.form-minhas-tracks { /* aqui criamos a grade do formulário de nova track */
+    display: grid; /* aqui usamos grid para organizar os campos em duas colunas */
+    grid-template-columns: 1fr 1fr; /* aqui definimos duas colunas iguais no desktop */
+    gap: 10px; /* aqui aplicamos espaço entre os campos */
+    margin-bottom: 14px; /* aqui separamos o formulário da lista de cards */
+}
+
+.campo-track { /* aqui agrupamos label e input/select de cada campo */
+    display: flex; /* aqui usamos flex para alinhar em coluna */
+    flex-direction: column; /* aqui colocamos label acima do campo */
+    gap: 6px; /* aqui aplicamos espaço entre label e campo */
+}
+
+.campo-track label { /* aqui estilizamos os rótulos dos campos */
+    color: #dfe8ff; /* aqui aplicamos uma cor clara para os labels */
+    font-size: 13px; /* aqui definimos tamanho legível e discreto */
+}
+
+.campo-track input { /* aqui estilizamos os inputs do formulário */
+    min-height: 42px; /* aqui definimos altura confortável para digitação */
+    border-radius: 10px; /* aqui arredondamos os cantos dos inputs */
+    border: 1px solid rgba(112, 125, 184, 0.45); /* aqui aplicamos borda suave neon */
+    background: rgba(15, 18, 31, 0.72); /* aqui usamos fundo escuro translúcido */
+    color: #d6d6d6; /* aqui definimos a cor do texto digitado */
+    padding: 8px 10px; /* aqui aplicamos espaçamento interno no campo */
+}
+
+.campo-track select { /* aqui estilizamos o select de vertentes */
+    min-height: 42px; /* aqui definimos altura igual aos inputs */
+    border-radius: 10px; /* aqui arredondamos os cantos do select */
+    border: 1px solid rgba(112, 125, 184, 0.45); /* aqui aplicamos borda suave neon */
+    background: rgba(15, 18, 31, 0.72); /* aqui usamos fundo escuro translúcido */
+    color: #d6d6d6; /* aqui definimos a cor do texto do select */
+    padding: 8px 10px; /* aqui aplicamos espaçamento interno no select */
+}
+
+.botao-adicionar-track { /* aqui estilizamos o botão Adicionar track */
+    min-height: 42px; /* aqui definimos a altura do botão */
+    border-radius: 10px; /* aqui arredondamos os cantos do botão */
+    border: none; /* aqui removemos borda padrão do navegador */
+    background: linear-gradient(90deg, #7A2CFF 0%, #00E5FF 100%); /* aqui aplicamos gradiente roxo/ciano do projeto */
+    color: #fff; /* aqui definimos a cor do texto do botão */
+    font-size: 14px; /* aqui definimos tamanho do texto do botão */
+    font-weight: 700; /* aqui destacamos o texto da ação principal */
+    cursor: pointer; /* aqui mostramos cursor de clique no botão */
+}
+
+.botao-adicionar-track:hover { /* aqui aplicamos o efeito de hover no botão */
+    box-shadow: 0 0 14px rgba(112, 57, 255, 0.45); /* aqui adicionamos brilho roxo ao passar o mouse */
+}
+
+.mensagem-tracks { /* aqui estilizamos a linha de mensagens da área Minhas Tracks */
+    color: #ffb0b0; /* aqui usamos cor de alerta para mensagens de erro */
+    min-height: 18px; /* aqui reservamos altura para não pular layout */
+    margin-bottom: 10px; /* aqui criamos espaço entre mensagem e lista */
+    font-size: 13px; /* aqui definimos tamanho discreto da mensagem */
+}
+
+.lista-minhas-tracks { /* aqui criamos a grade dos cards de tracks do usuário */
+    display: grid; /* aqui usamos grid para listar os cards */
+    grid-template-columns: 1fr 1fr; /* aqui definimos duas colunas no desktop */
+    gap: 12px; /* aqui aplicamos espaço entre os cards */
+}
+
+.card-minha-track { /* aqui estilizamos cada card de track do usuário */
+    border-radius: 12px; /* aqui arredondamos os cantos do card */
+    border: 1px solid rgba(130, 90, 255, 0.4); /* aqui aplicamos borda no padrão neon */
+    background: rgba(9, 13, 28, 0.86); /* aqui aplicamos fundo escuro no card */
+    overflow: hidden; /* aqui garantimos que a imagem respeite o raio de borda */
+}
+
+.capa-minha-track { /* aqui definimos a área da imagem no card */
+    height: 150px; /* aqui definimos altura da miniatura da track */
+    border-bottom: 1px solid rgba(112, 125, 184, 0.35); /* aqui adicionamos separação entre imagem e texto */
+}
+
+.capa-minha-track img { /* aqui garantimos que a miniatura ocupe toda a capa */
+    width: 100%; /* aqui usamos largura total da área de capa */
+    height: 100%; /* aqui usamos altura total da área de capa */
+    object-fit: cover; /* aqui evitamos deformação da imagem */
+}
+
+.conteudo-minha-track { /* aqui estilizamos o bloco de texto de cada card */
+    padding: 10px; /* aqui aplicamos espaçamento interno do conteúdo */
+    display: flex; /* aqui usamos flex para empilhar os itens */
+    flex-direction: column; /* aqui organizamos em coluna */
+    gap: 6px; /* aqui criamos espaço entre linhas de texto */
+}
+
+.conteudo-minha-track h2 { /* aqui estilizamos o nome da track no card */
+    font-size: 18px; /* aqui definimos tamanho do título do card */
+    color: #eaf0ff; /* aqui definimos cor clara no padrão do projeto */
+}
+
+.conteudo-minha-track p { /* aqui estilizamos produtor e vertente no card */
+    color: #a9b6d6; /* aqui usamos cor secundária para as informações */
+    font-size: 13px; /* aqui definimos tamanho menor para os detalhes */
+}
+
+.conteudo-minha-track a { /* aqui estilizamos o link OUVIR dentro do card */
+    margin-top: 4px; /* aqui criamos um pequeno espaço antes do link */
+    text-decoration: none; /* aqui removemos sublinhado do link */
+    color: #ffffff; /* aqui definimos cor do texto do link */
+    background: linear-gradient(90deg, #7A2CFF 0%, #00E5FF 100%); /* aqui aplicamos gradiente roxo/ciano no botão link */
+    border-radius: 8px; /* aqui arredondamos o botão link */
+    min-height: 34px; /* aqui definimos a altura do link OUVIR */
+    display: inline-flex; /* aqui centralizamos o texto dentro do link */
+    align-items: center; /* aqui alinhamos verticalmente o texto */
+    justify-content: center; /* aqui alinhamos horizontalmente o texto */
+    font-weight: 700; /* aqui destacamos o texto OUVIR */
+}
+
+.mensagem-vazia { /* aqui estilizamos as mensagens quando não há tracks cadastradas */
+    color: #a9b6d6; /* aqui usamos a cor secundária padrão da tela */
 }
 
 .acoes-interacao {
@@ -121,5 +244,13 @@ body.pagina-interacao {
 
     .acoes-interacao {
         width: 100%;
+    }
+
+    .form-minhas-tracks { /* aqui colocamos os campos do formulário em uma coluna no mobile */
+        grid-template-columns: 1fr; /* aqui usamos uma coluna para melhor leitura em tela menor */
+    }
+
+    .lista-minhas-tracks { /* aqui colocamos os cards em uma coluna no mobile */
+        grid-template-columns: 1fr; /* aqui usamos uma coluna para os cards no celular */
     }
 }

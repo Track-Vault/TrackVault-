@@ -6,31 +6,10 @@
 
 USE trackvault;
 
--- 1) Tabela de acesso usada nas rotas de "em alta".
--- Se ela já existir no banco, pule este CREATE.
-CREATE TABLE acesso (
-    id_acesso INT PRIMARY KEY AUTO_INCREMENT,
-    fk_usuario INT NOT NULL,
-    fk_track INT NOT NULL,
-    data_acesso DATETIME DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_acesso_usuario
-    FOREIGN KEY (fk_usuario)
-    REFERENCES usuario(id_usuario),
-
-    CONSTRAINT fk_acesso_track
-    FOREIGN KEY (fk_track)
-    REFERENCES track(id_track)
-);
-
--- 2) Vertentes base.
+-- 2) Vertentes base (somente as que não existem no script-tabelas.sql). -- aqui ajustamos para evitar conflito de nome UNIQUE
 INSERT INTO vertente (nome, descricao) VALUES
-('Tech House', 'Vertente de música eletrônica'),
-('Techno', 'Vertente de música eletrônica'),
-('Melodic Techno', 'Vertente melódica de Techno'),
-('Hard Techno', 'Vertente de música eletrônica'),
-('Full-On', 'Vertente de música eletrônica'),
-('Forest', 'Vertente de música eletrônica');
+('Full-On', 'Vertente de música eletrônica'), -- aqui mantemos apenas a vertente Full-On nesta seção
+('Forest', 'Vertente de música eletrônica'); -- aqui mantemos apenas a vertente Forest nesta seção
 
 -- 3) Produtores base (mínimo 5 para o ranking).
 INSERT INTO produtor (nome) VALUES
@@ -58,6 +37,7 @@ INSERT INTO track (nome, link, data_cadastro, fk_produtor, fk_vertente) VALUES
 ('Doppler', 'https://www.youtube.com/results?search_query=Charlotte+de+Witte+Doppler', DATE_SUB(NOW(), INTERVAL 145 DAY), 1, 2),
 ('Afterlife Signal', 'https://www.youtube.com/results?search_query=ANNA+Afterlife+Signal', DATE_SUB(NOW(), INTERVAL 165 DAY), 6, 2);
 
+-- Atenção: esta seção exige que já exista um usuário com id 1 cadastrado no banco. -- aqui avisamos o pré-requisito antes dos acessos de teste
 -- 5) Acessos de teste.
 -- Usa fk_usuario = 1 como usuário demonstrativo.
 INSERT INTO acesso (fk_usuario, fk_track, data_acesso) VALUES

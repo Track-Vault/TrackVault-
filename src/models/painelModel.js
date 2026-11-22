@@ -38,6 +38,78 @@ function totalVertentes() {
     return database.executar(instrucaoSql);
 }
 
+function vertentes() { // aqui listamos as vertentes para preencher o select da interação
+    let instrucaoSql = `
+        SELECT id_vertente, nome
+        FROM vertente
+        ORDER BY nome;
+    `; // aqui montamos a consulta de vertentes com id e nome
+    return database.executar(instrucaoSql); // aqui executamos a consulta no banco
+}
+
+function minhasTracks(idUsuario) { // aqui listamos as tracks cadastradas pelo usuário logado
+    let instrucaoSql = `
+        SELECT
+            t.id_track,
+            t.nome AS nome_track,
+            p.nome AS nome_produtor,
+            v.nome AS nome_vertente,
+            t.link,
+            t.data_cadastro
+        FROM track t
+        JOIN produtor p ON p.id_produtor = t.fk_produtor
+        JOIN vertente v ON v.id_vertente = t.fk_vertente
+        WHERE t.fk_usuario = ${idUsuario}
+        ORDER BY t.data_cadastro DESC;
+    `; // aqui montamos a consulta das tracks do usuário com produtor e vertente
+    return database.executar(instrucaoSql); // aqui executamos a consulta no banco
+}
+
+function buscarProdutorPorNome(nomeProdutorTratado) { // aqui buscamos se o produtor já existe pelo nome
+    let instrucaoSql = `
+        SELECT id_produtor
+        FROM produtor
+        WHERE nome = '${nomeProdutorTratado}';
+    `; // aqui montamos a consulta para localizar produtor existente
+    return database.executar(instrucaoSql); // aqui executamos a consulta no banco
+}
+
+function inserirProdutor(nomeProdutorTratado) { // aqui inserimos um produtor novo quando ele ainda não existe
+    let instrucaoSql = `
+        INSERT INTO produtor (nome)
+        VALUES ('${nomeProdutorTratado}');
+    `; // aqui montamos o insert do produtor
+    return database.executar(instrucaoSql); // aqui executamos o insert do produtor
+}
+
+function inserirTrack(nomeTrackTratado, linkTrackTratado, idProdutor, idVertente, idUsuario) { // aqui inserimos a track vinculada ao usuário, produtor e vertente
+    let instrucaoSql = `
+        INSERT INTO track (nome, link, fk_produtor, fk_vertente, fk_usuario)
+        VALUES ('${nomeTrackTratado}', '${linkTrackTratado}', ${idProdutor}, ${idVertente}, ${idUsuario});
+    `; // aqui montamos o insert da track para alimentar Minhas Tracks e dashboard
+    return database.executar(instrucaoSql); // aqui executamos o insert da track
+}
+
+function cadastrarTrack(nomeTrack, nomeProdutor, idVertente, linkTrack, idUsuario) { // aqui encadeamos o processo de cadastro de produtor + track
+    let nomeTrackTratado = String(nomeTrack).replaceAll("'", "''"); // aqui tratamos aspas simples no nome da track para evitar erro SQL
+    let nomeProdutorTratado = String(nomeProdutor).replaceAll("'", "''"); // aqui tratamos aspas simples no nome do produtor para evitar erro SQL
+    let linkTrackTratado = String(linkTrack).replaceAll("'", "''"); // aqui tratamos aspas simples no link para evitar erro SQL
+
+    return buscarProdutorPorNome(nomeProdutorTratado) // aqui começamos buscando se o produtor já existe
+        .then(function (resultadoProdutor) { // aqui tratamos o retorno da busca do produtor
+            if (resultadoProdutor.length > 0) { // aqui verificamos se já existe produtor com esse nome
+                let idProdutorExistente = Number(resultadoProdutor[0].id_produtor); // aqui pegamos o id do produtor existente
+                return inserirTrack(nomeTrackTratado, linkTrackTratado, idProdutorExistente, idVertente, idUsuario); // aqui inserimos a track usando produtor existente
+            } else { // aqui tratamos quando o produtor ainda não existe
+                return inserirProdutor(nomeProdutorTratado) // aqui inserimos o produtor novo no banco
+                    .then(function (resultadoInsertProdutor) { // aqui pegamos o retorno do insert do produtor
+                        let idProdutorNovo = Number(resultadoInsertProdutor.insertId); // aqui obtemos o id do produtor que acabou de ser criado
+                        return inserirTrack(nomeTrackTratado, linkTrackTratado, idProdutorNovo, idVertente, idUsuario); // aqui inserimos a track com o produtor novo
+                    });
+            }
+        });
+}
+
 // Tracks mais acessadas nos últimos 7 dias (JOIN junta as tabelas; GROUP BY agrupa por track)
 function emAlta() {
     let instrucaoSql = `
@@ -136,6 +208,9 @@ module.exports = {
     tracksMesAtual,
     totalProdutores,
     totalVertentes,
+    vertentes,
+    minhasTracks,
+    cadastrarTrack,
     emAlta,
     ultimas,
     topProdutores,

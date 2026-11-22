@@ -12,7 +12,7 @@
 </head>
 
 <!-- Usa o mesmo mecanismo de sessão do projeto para proteger a página -->
-<body class="pagina-interacao" onload="validarSessao()">
+<body class="pagina-interacao" onload="validarSessao(), iniciarMinhasTracks()"> <!-- aqui validamos sessão e carregamos o módulo Minhas Tracks ao abrir -->
     <div class="header">
         <div class="container">
             <h1 class="titulo">TrackVault</h1>
@@ -29,13 +29,205 @@
 
         <div class="bloco-interacao">
             <!-- Área reservada para o conteúdo de interação que será adicionado depois -->
-            <div id="area-interacao" class="area-interacao"></div>
+            <div id="area-interacao" class="area-interacao"> <!-- aqui começa a área principal da funcionalidade Minhas Tracks -->
+                <h2>MINHAS TRACKS</h2> <!-- aqui está o título da área de cadastro e listagem de tracks -->
+                <p class="subtitulo-area">Adicione suas tracks e acompanhe sua coleção.</p> <!-- aqui está a descrição curta da área -->
+
+                <div class="form-minhas-tracks"> <!-- aqui está o formulário para cadastrar uma nova track -->
+                    <div class="campo-track"> <!-- aqui está o campo do nome da track -->
+                        <label>Nome da track</label> <!-- aqui está o rótulo do campo nome -->
+                        <input id="input_nome_track" type="text" placeholder="Digite o nome da track"> <!-- aqui recebemos o nome da track -->
+                    </div>
+
+                    <div class="campo-track"> <!-- aqui está o campo do produtor -->
+                        <label>Produtor</label> <!-- aqui está o rótulo do campo produtor -->
+                        <input id="input_produtor_track" type="text" placeholder="Digite o nome do produtor"> <!-- aqui recebemos o nome do produtor -->
+                    </div>
+
+                    <div class="campo-track"> <!-- aqui está o campo de seleção da vertente -->
+                        <label>Vertente</label> <!-- aqui está o rótulo do campo vertente -->
+                        <select id="select_vertente"> <!-- aqui selecionamos a vertente da track -->
+                            <option value="">Carregando vertentes...</option> <!-- aqui mostramos opção inicial enquanto carrega -->
+                        </select>
+                    </div>
+
+                    <div class="campo-track"> <!-- aqui está o campo do link da track -->
+                        <label>Link do YouTube</label> <!-- aqui está o rótulo do campo link -->
+                        <input id="input_link_track" type="text" placeholder="https://www.youtube.com/watch?v=..."> <!-- aqui recebemos o link da track -->
+                    </div>
+
+                    <button class="botao-adicionar-track" onclick="adicionarTrack()">Adicionar</button> <!-- aqui está o botão para enviar o cadastro da track -->
+                </div>
+
+                <p id="mensagem_tracks" class="mensagem-tracks"></p> <!-- aqui exibimos mensagens de retorno da listagem/cadastro -->
+
+                <div id="lista_minhas_tracks" class="lista-minhas-tracks"></div> <!-- aqui renderizamos os cards das tracks do usuário -->
+            </div>
 
             <div class="acoes-interacao">
                 <a class="botao-dashboard" href="./dashboard/dashboard.html">Ir para a Dashboard</a>
             </div>
         </div>
     </div>
+
+    <script>
+        function iniciarMinhasTracks() { // aqui inicializamos a carga das vertentes e das tracks do usuário
+            carregarVertentes(); // aqui buscamos as vertentes para preencher o select
+            carregarMinhasTracks(); // aqui buscamos as tracks do usuário para montar os cards
+        }
+
+        function carregarVertentes() { // aqui chamamos a rota que devolve todas as vertentes cadastradas
+            fetch("/painel/vertentes", { // aqui fazemos a requisição GET de vertentes
+                method: "GET", // aqui definimos o método GET para consulta
+                cache: "no-store" // aqui evitamos cache para sempre trazer dados atualizados
+            }).then(function (resposta) { // aqui tratamos a resposta da API de vertentes
+                if (resposta.ok) { // aqui verificamos se a resposta veio com sucesso
+                    resposta.json().then(function (lista) { // aqui convertemos a resposta para JSON
+                        let htmlOpcoes = "<option value=\"\">Selecione a vertente</option>"; // aqui criamos a primeira opção do select
+                        let i = 0; // aqui iniciamos o índice do while
+
+                        while (i < lista.length) { // aqui percorremos a lista de vertentes sem usar for
+                            htmlOpcoes = htmlOpcoes + "<option value=\"" + Number(lista[i].id_vertente) + "\">" + limparTexto(lista[i].nome) + "</option>"; // aqui adicionamos cada vertente como opção
+                            i++; // aqui avançamos para o próximo item da lista
+                        }
+
+                        select_vertente.innerHTML = htmlOpcoes; // aqui colocamos as opções prontas dentro do select
+                    });
+                } else { // aqui tratamos erro de status na rota de vertentes
+                    mensagem_tracks.innerHTML = "Não foi possível carregar as vertentes."; // aqui mostramos mensagem de erro ao usuário
+                }
+            }).catch(function () { // aqui tratamos erro de conexão na rota de vertentes
+                mensagem_tracks.innerHTML = "Erro ao consultar vertentes."; // aqui exibimos erro de conexão
+            });
+        }
+
+        function carregarMinhasTracks() { // aqui buscamos as tracks cadastradas pelo usuário logado
+            let idUsuario = Number(sessionStorage.ID_USUARIO); // aqui pegamos o id do usuário salvo na sessão
+
+            if (idUsuario <= 0) { // aqui validamos se o id da sessão é válido
+                mensagem_tracks.innerHTML = "Sessão inválida para carregar suas tracks."; // aqui avisamos erro de sessão
+                return; // aqui interrompemos a função quando a sessão está inválida
+            }
+
+            fetch("/painel/minhas-tracks/" + idUsuario, { // aqui chamamos a rota que devolve as tracks do usuário
+                method: "GET", // aqui usamos GET para consulta
+                cache: "no-store" // aqui desativamos cache para refletir novos cadastros
+            }).then(function (resposta) { // aqui tratamos a resposta da API de tracks
+                if (resposta.ok) { // aqui verificamos se a rota retornou sucesso
+                    resposta.json().then(function (lista) { // aqui transformamos o retorno em JSON
+                        let htmlLista = ""; // aqui iniciamos o HTML que irá montar os cards
+                        let i = 0; // aqui iniciamos o índice do while
+
+                        if (lista.length == 0) { // aqui tratamos o caso em que o usuário ainda não cadastrou tracks
+                            lista_minhas_tracks.innerHTML = "<p class=\"mensagem-vazia\">Você ainda não cadastrou tracks.</p>"; // aqui mostramos mensagem de lista vazia
+                            return; // aqui encerramos para não tentar montar cards inexistentes
+                        }
+
+                        while (i < lista.length) { // aqui percorremos cada track da lista sem usar for
+                            let linkTrack = String(lista[i].link); // aqui pegamos o link da track atual
+                            let idVideo = linkTrack.replaceAll("https://www.youtube.com/watch?v=", ""); // aqui extraímos o ID do vídeo para montar a miniatura
+
+                            htmlLista = htmlLista + "<div class=\"card-minha-track\">" + // aqui abrimos o card da track
+                                "<div class=\"capa-minha-track\"><img src=\"https://img.youtube.com/vi/" + limparTexto(idVideo) + "/hqdefault.jpg\" alt=\"Capa da track\"></div>" + // aqui renderizamos a miniatura do YouTube
+                                "<div class=\"conteudo-minha-track\">" + // aqui abrimos a área de texto do card
+                                "<h2>" + limparTexto(lista[i].nome_track) + "</h2>" + // aqui mostramos o nome da track
+                                "<p>Produtor: " + limparTexto(lista[i].nome_produtor) + "</p>" + // aqui mostramos o produtor da track
+                                "<p>Vertente: " + limparTexto(lista[i].nome_vertente) + "</p>" + // aqui mostramos a vertente da track
+                                "<a href=\"" + limparTexto(linkTrack) + "\" target=\"_blank\" onclick=\"registrarAcesso(" + Number(lista[i].id_track) + ")\">OUVIR</a>" + // aqui mostramos o link OUVIR e registramos o acesso
+                                "</div>" + // aqui fechamos o conteúdo textual do card
+                                "</div>"; // aqui fechamos o card completo
+
+                            i++; // aqui avançamos para o próximo card
+                        }
+
+                        lista_minhas_tracks.innerHTML = htmlLista; // aqui exibimos todos os cards na tela
+                    });
+                } else { // aqui tratamos status de erro ao buscar tracks
+                    lista_minhas_tracks.innerHTML = "<p class=\"mensagem-vazia\">Não foi possível carregar suas tracks.</p>"; // aqui mostramos erro na área de lista
+                }
+            }).catch(function () { // aqui tratamos erro de conexão ao consultar tracks
+                lista_minhas_tracks.innerHTML = "<p class=\"mensagem-vazia\">Erro ao consultar suas tracks.</p>"; // aqui mostramos erro de conexão na lista
+            });
+        }
+
+        function adicionarTrack() { // aqui validamos e enviamos uma nova track para a API
+            let nomeTrack = input_nome_track.value; // aqui pegamos o valor digitado no nome da track
+            let nomeProdutor = input_produtor_track.value; // aqui pegamos o valor digitado no produtor
+            let idVertente = Number(select_vertente.value); // aqui pegamos o id da vertente selecionada
+            let linkTrack = input_link_track.value; // aqui pegamos o link digitado da track
+            let idUsuario = Number(sessionStorage.ID_USUARIO); // aqui pegamos o id do usuário logado na sessão
+
+            if (nomeTrack == "" || nomeProdutor == "" || linkTrack == "" || idVertente <= 0) { // aqui validamos se todos os campos foram preenchidos
+                alert("Preencha todos os campos antes de adicionar."); // aqui avisamos que há campos vazios
+                return; // aqui impedimos o envio inválido
+            }
+
+            if (nomeTrack.includes("'")) { // aqui validamos se o nome da track contém aspas simples
+                alert("O nome da track não pode conter aspas simples (')."); // aqui avisamos sobre a regra do nome
+                return; // aqui bloqueamos o envio com nome inválido
+            }
+
+            if (!linkTrack.startsWith("https://www.youtube.com/watch?v=")) { // aqui validamos se o link começa com o padrão exigido
+                alert("O link deve começar com https://www.youtube.com/watch?v="); // aqui avisamos o formato correto do link
+                return; // aqui bloqueamos o envio com link inválido
+            }
+
+            if (idUsuario <= 0) { // aqui validamos se existe usuário válido na sessão
+                alert("Sessão inválida. Faça login novamente."); // aqui avisamos erro de sessão
+                return; // aqui impedimos o envio sem sessão válida
+            }
+
+            fetch("/painel/cadastrar-track", { // aqui fazemos o POST para cadastrar a nova track
+                method: "POST", // aqui definimos o método POST para criação
+                headers: { "Content-Type": "application/json" }, // aqui informamos que o corpo da requisição é JSON
+                body: JSON.stringify({ // aqui montamos os dados que serão enviados para a API
+                    nomeTrackServer: nomeTrack, // aqui enviamos o nome da track
+                    produtorTrackServer: nomeProdutor, // aqui enviamos o nome do produtor
+                    idVertenteServer: idVertente, // aqui enviamos o id da vertente
+                    linkTrackServer: linkTrack, // aqui enviamos o link da track
+                    idUsuarioServer: idUsuario // aqui enviamos o id do usuário que está cadastrando
+                })
+            }).then(function (resposta) { // aqui tratamos o retorno do cadastro
+                if (resposta.ok) { // aqui verificamos sucesso no cadastro
+                    alert("Track adicionada com sucesso!"); // aqui confirmamos ao usuário que cadastrou
+                    input_nome_track.value = ""; // aqui limpamos o campo de nome após sucesso
+                    input_produtor_track.value = ""; // aqui limpamos o campo de produtor após sucesso
+                    select_vertente.value = ""; // aqui limpamos a seleção de vertente após sucesso
+                    input_link_track.value = ""; // aqui limpamos o campo de link após sucesso
+                    carregarMinhasTracks(); // aqui atualizamos a lista para mostrar a nova track
+                } else { // aqui tratamos retorno de erro no cadastro
+                    resposta.text().then(function (textoErro) { // aqui lemos a mensagem de erro devolvida pela API
+                        alert(textoErro); // aqui mostramos o erro para o usuário
+                    });
+                }
+            }).catch(function () { // aqui tratamos erro de conexão no cadastro
+                alert("Erro ao tentar adicionar a track."); // aqui avisamos erro de conexão
+            });
+        }
+
+        function registrarAcesso(idTrack) { // aqui registramos o clique em OUVIR para alimentar o painel
+            let idUsuario = Number(sessionStorage.ID_USUARIO); // aqui pegamos o id do usuário da sessão
+
+            if (idUsuario <= 0 || Number(idTrack) <= 0) { // aqui validamos id do usuário e id da track
+                return; // aqui encerramos silenciosamente se os ids não forem válidos
+            }
+
+            fetch("/painel/acessar/" + Number(idTrack), { // aqui chamamos a rota de registro de acesso da track
+                method: "POST", // aqui usamos POST para registrar o acesso
+                headers: { "Content-Type": "application/json" }, // aqui informamos corpo JSON
+                body: JSON.stringify({ idUsuarioServer: idUsuario }) // aqui enviamos o id do usuário que clicou
+            });
+        }
+
+        function limparTexto(texto) { // aqui criamos uma função simples para evitar quebrar o HTML dos cards
+            let textoLimpo = String(texto); // aqui garantimos que o valor será tratado como texto
+            textoLimpo = textoLimpo.replaceAll("&", "&amp;"); // aqui escapamos o caractere &
+            textoLimpo = textoLimpo.replaceAll("<", "&lt;"); // aqui escapamos o caractere <
+            textoLimpo = textoLimpo.replaceAll(">", "&gt;"); // aqui escapamos o caractere >
+            textoLimpo = textoLimpo.replaceAll("\"", "&quot;"); // aqui escapamos aspas duplas
+            return textoLimpo; // aqui devolvemos o texto já tratado
+        }
+    </script>
 </body>
 
 </html>

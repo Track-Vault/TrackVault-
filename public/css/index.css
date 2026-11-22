@@ -496,6 +496,37 @@ body::before {
     color: #eaf1ff;
 }
 
+.secao-ouca-agora .card-vertente { /* aqui ajustamos a altura dos cards da seção OUÇA AGORA para caber o link */
+    height: auto; /* aqui removemos a altura fixa para não cortar o botão OUVIR */
+    min-height: 276px; /* aqui mantemos um tamanho mínimo parecido com os outros cards */
+}
+
+.secao-ouca-agora .capa-vertente { /* aqui ajustamos a altura da miniatura na seção OUÇA AGORA */
+    height: 170px; /* aqui está a altura da capa para equilibrar imagem + título + link */
+}
+
+.ouca-agora-link { /* aqui criamos o estilo do link OUVIR */
+    display: inline-flex; /* aqui centralizamos o texto dentro do botão */
+    align-items: center; /* aqui alinhamos o texto no eixo vertical */
+    justify-content: center; /* aqui alinhamos o texto no eixo horizontal */
+    min-height: 36px; /* aqui definimos a altura do botão OUVIR */
+    margin: 0 12px 12px; /* aqui criamos espaço nas laterais e embaixo do botão */
+    border-radius: 10px; /* aqui arredondamos o botão no mesmo estilo do site */
+    border: 1px solid rgba(132, 83, 255, 0.75); /* aqui usamos a borda roxa já presente na home */
+    background: linear-gradient(120deg, rgba(130, 53, 255, 0.95), rgba(88, 52, 230, 0.95)); /* aqui aplicamos o gradiente já usado nos CTAs */
+    text-decoration: none; /* aqui removemos o sublinhado do link */
+    color: #f5f8ff; /* aqui definimos a cor clara do texto */
+    font-size: 13px; /* aqui definimos um tamanho pequeno para o texto OUVIR */
+    font-weight: 700; /* aqui destacamos o texto do botão */
+    letter-spacing: 1px; /* aqui aumentamos o espaçamento para dar estilo de ação */
+    transition: .25s; /* aqui suavizamos a transição do hover */
+}
+
+.ouca-agora-link:hover { /* aqui aplicamos o efeito ao passar o mouse no botão OUVIR */
+    box-shadow: 0 0 14px rgba(186, 54, 255, 0.32); /* aqui adicionamos brilho roxo no hover */
+    transform: translateY(-1px); /* aqui damos leve movimento para feedback visual */
+}
+
 /* SEÇÃO INSTITUCIONAL */
 .secao-institucional {
     padding: 34px 4.5% 56px;

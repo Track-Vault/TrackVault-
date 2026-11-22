@@ -35,6 +35,18 @@ router.get("/evolucao-catalogo", function (req, res) {
     painelController.evolucaoCatalogo(req, res);
 });
 
+router.get("/vertentes", function (req, res) { // aqui criamos a rota para listar vertentes no select da interação
+    painelController.vertentes(req, res); // aqui direcionamos a requisição para o controller de vertentes
+});
+
+router.get("/minhas-tracks/:idUsuario", function (req, res) { // aqui criamos a rota para listar tracks do usuário logado
+    painelController.minhasTracks(req, res); // aqui direcionamos a requisição para o controller de minhas tracks
+});
+
+router.post("/cadastrar-track", function (req, res) { // aqui criamos a rota para cadastrar uma nova track do usuário
+    painelController.cadastrarTrack(req, res); // aqui direcionamos a requisição para o controller de cadastro de track
+});
+
 // POST: registra que o usuário clicou em "Ouvir" (o :id é o id da track)
 router.post("/acessar/:id", function (req, res) {
     painelController.acessar(req, res);

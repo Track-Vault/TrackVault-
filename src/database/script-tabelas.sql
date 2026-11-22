@@ -68,3 +68,13 @@ CREATE TABLE acesso (
     FOREIGN KEY (fk_track)
     REFERENCES track(id_track)
 );
+
+-- Adiciona a coluna que liga cada track ao usuário que cadastrou (para Minhas Tracks)
+ALTER TABLE track
+ADD fk_usuario INT;
+
+-- Cria a chave estrangeira da track para a tabela usuario
+ALTER TABLE track
+ADD CONSTRAINT fk_track_usuario
+FOREIGN KEY (fk_usuario)
+REFERENCES usuario(id_usuario);

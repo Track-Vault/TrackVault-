@@ -1,5 +1,5 @@
-// var ambiente_processo = 'producao';
-var ambiente_processo = 'desenvolvimento';
+var ambiente_processo = 'producao'; // aqui ativamos o ambiente de produção para usar o arquivo .env
+// var ambiente_processo = 'desenvolvimento'; // aqui desativamos o ambiente de desenvolvimento para não usar .env.dev
 
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 // Acima, temos o uso do operador ternário para definir o caminho do arquivo .env
