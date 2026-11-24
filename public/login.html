@@ -72,11 +72,8 @@
                 return false;
             }
             else {
-                setInterval(sumirMensagem, 5000)
+                setTimeout(sumirMensagem, 5000) // aqui trocamos para timeout único de 5 segundos
             }
-
-            console.log("FORM LOGIN: ", emailVar);
-            console.log("FORM SENHA: ", senhaVar);
 
             fetch("/usuarios/autenticar", {
                 method: "POST",
@@ -93,7 +90,7 @@
                 if (resposta.ok) {
                     console.log(resposta);
 
-                    resposta.json().then(json => {
+                    resposta.json().then(function (json) { // aqui trocamos a seta por function no parse do JSON
                         console.log(json);
                         console.log(JSON.stringify(json));
                         sessionStorage.EMAIL_USUARIO = json.email;
@@ -110,7 +107,7 @@
 
                     console.log("Houve um erro ao tentar realizar o login!");
 
-                    resposta.text().then(texto => {
+                    resposta.text().then(function (texto) { // aqui trocamos a seta por function no texto de erro
                         console.error(texto);
                         finalizarAguardar(texto);
                     });

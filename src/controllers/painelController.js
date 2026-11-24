@@ -46,17 +46,6 @@ function emAlta(req, res) {
         });
 }
 
-function ultimas(req, res) {
-    painelModel.ultimas()
-        .then(function (resultado) {
-            res.json(resultado);
-        })
-        .catch(function (erro) {
-            console.log("Erro no painel: ", erro);
-            res.status(500).json(erro.sqlMessage || "Erro ao buscar os dados do painel");
-        });
-}
-
 function topProdutores(req, res) {
     painelModel.topProdutores()
         .then(function (resultado) {
@@ -176,7 +165,6 @@ function acessar(req, res) {
 module.exports = {
     resumo,
     emAlta,
-    ultimas,
     topProdutores,
     produtoresAcessados,
     porVertente,

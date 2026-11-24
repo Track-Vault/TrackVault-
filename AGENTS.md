@@ -139,3 +139,9 @@ Priorizar as funcionalidades essenciais para concluir o projeto dentro do prazo 
 ## Regra geral: 
 Antes de implementar uma alteração, siga as tecnologias, arquitetura, convenções e restrições descritas neste documento. Caso alguma informação esteja ausente, analise o código existente e siga os padrões já adotados no projeto.
 O objetivo é desenvolver o TrackVault de forma funcional, organizada e compatível com o conteúdo que já aprendi na SPTech, garantindo que eu consiga compreender as alterações realizadas.
+
+## AUTORIZAÇÕES CONCEDIDAS (22/11/2026)
+
+- HTML: tags `a`, `img`, `span`, `section`, `article`, `header`, `nav`, `main`, `footer`, `br`, `h3`, `h4`, `ul`, `li`, `select`, `option`, `canvas`, `script`, `meta`; atributos `src`, `alt`, `lang`, `charset`, `content`, `http-equiv`, `onload`, `target`.
+- JS: `fetch/.then/.catch/.json()`, `JSON.stringify`, `sessionStorage`, `window.location`, `setTimeout`, `.style.display`, `function/return`, `String()`, `console.log`, `.trim()`; biblioteca Chart.js (`new Chart`) para os gráficos.
+- SQL: `GROUP BY`, `ORDER BY`, `LIMIT`, `AS`, `INTERVAL`, `DATE_SUB`, `MONTH()`, `YEAR()`, `CURRENT_DATE()`, `DATE_FORMAT()`, `DEFAULT NOW()`.

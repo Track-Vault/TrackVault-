@@ -34,9 +34,10 @@ CREATE TABLE track (
     id_track INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(150) NOT NULL,
     link VARCHAR(500) NOT NULL,
-    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
+    data_cadastro DATETIME DEFAULT NOW(), -- aqui trocamos para NOW() no cadastro automático da track
     fk_produtor INT NOT NULL,
     fk_vertente INT NOT NULL,
+    fk_usuario INT, -- aqui colocamos a coluna do usuário dentro da criação da tabela track
 
     CONSTRAINT fk_track_produtor
     FOREIGN KEY (fk_produtor)
@@ -44,21 +45,27 @@ CREATE TABLE track (
 
     CONSTRAINT fk_track_vertente
     FOREIGN KEY (fk_vertente)
-    REFERENCES vertente(id_vertente)
+    REFERENCES vertente(id_vertente),
+
+    CONSTRAINT fk_track_usuario -- aqui criamos a constraint que liga track com usuário
+    FOREIGN KEY (fk_usuario) -- aqui definimos a coluna fk_usuario como chave estrangeira
+    REFERENCES usuario(id_usuario) -- aqui apontamos a FK para a PK da tabela usuario
 );
 
 INSERT INTO vertente (nome, descricao) VALUES
 ('Tech House', 'Vertente de música eletrônica'),
 ('Techno', 'Vertente de música eletrônica'),
 ('Melodic Techno', 'Vertente melódica de Techno'),
-('Hard Techno', 'Vertente de música eletrônica');
+('Hard Techno', 'Vertente de música eletrônica'), -- aqui mantemos a quarta vertente na ordem solicitada
+('Full-On', 'Vertente de música eletrônica'), -- aqui adicionamos a quinta vertente na ordem solicitada
+('Forest', 'Vertente de música eletrônica'); -- aqui adicionamos a sexta vertente na ordem solicitada
 
 -- Registra cada clique em "Ouvir" no dashboard (alimenta "Tracks em alta" e "Produtores mais acessados")
 CREATE TABLE acesso (
     id_acesso INT PRIMARY KEY AUTO_INCREMENT,
     fk_usuario INT NOT NULL,
     fk_track INT NOT NULL,
-    data_acesso DATETIME DEFAULT CURRENT_TIMESTAMP,
+    data_acesso DATETIME DEFAULT NOW(), -- aqui trocamos para NOW() no registro automático de acesso
 
     CONSTRAINT fk_acesso_usuario
     FOREIGN KEY (fk_usuario)
@@ -68,13 +75,3 @@ CREATE TABLE acesso (
     FOREIGN KEY (fk_track)
     REFERENCES track(id_track)
 );
-
--- Adiciona a coluna que liga cada track ao usuário que cadastrou (para Minhas Tracks)
-ALTER TABLE track
-ADD fk_usuario INT;
-
--- Cria a chave estrangeira da track para a tabela usuario
-ALTER TABLE track
-ADD CONSTRAINT fk_track_usuario
-FOREIGN KEY (fk_usuario)
-REFERENCES usuario(id_usuario);

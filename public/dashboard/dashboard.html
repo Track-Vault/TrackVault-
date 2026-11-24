@@ -24,10 +24,7 @@
 
             <div class="menu-links">
                 <a href="#" class="item-menu ativo">Dashboard</a>
-                <a href="#" class="item-menu">Minhas Tracks</a>
-                <a href="#" class="item-menu">Descobrir</a>
-                <a href="#" class="item-menu">Analytics</a>
-                <a href="#" class="item-menu">Configurações</a>
+                <a href="../interacao.html" class="item-menu">Minhas Tracks</a> <!-- aqui apontamos o menu Minhas Tracks para a tela de interação -->
             </div>
 
             <!-- Mantém o encerramento de sessão existente -->
@@ -53,17 +50,17 @@
                 </div>
 
                 <div class="card-kpi">
-                    <p class="kpi-titulo">Vertentes Musicais Mais Ouvidas</p>
+                    <p class="kpi-titulo">Total de Vertentes</p> <!-- aqui ajustamos o rótulo do KPI de vertentes -->
                     <p id="kpi_total_vertentes" class="kpi-valor">0</p>
                 </div>
 
                 <div class="card-kpi">
-                    <p class="kpi-titulo">Top Produtores Cadastrados</p>
+                    <p class="kpi-titulo">Total de Produtores</p> <!-- aqui ajustamos o rótulo do KPI de produtores -->
                     <p id="kpi_total_produtores" class="kpi-valor">0</p>
                 </div>
 
                 <div class="card-kpi">
-                    <p class="kpi-titulo">Suas Tracks Adicionadas no Mês</p>
+                    <p class="kpi-titulo">Tracks Cadastradas no Mês</p> <!-- aqui ajustamos o rótulo do KPI mensal -->
                     <p id="kpi_tracks_mes" class="kpi-valor">0</p>
                 </div>
             </div>
@@ -105,39 +102,10 @@
         let graficoEvolucaoLinha;
         let graficoTopProdutores;
 
-        // Plugin simples para mostrar valores numéricos sobre os pontos/barras
-        let pluginValores = {
-            id: "pluginValores",
-            afterDatasetsDraw: function (chart) {
-                let ctx = chart.ctx;
-                ctx.save();
-                ctx.fillStyle = "#EAF0FF";
-                ctx.font = "bold 12px Arial";
-
-                let meta = chart.getDatasetMeta(0);
-                let dados = chart.data.datasets[0].data;
-
-                for (let i = 0; i < meta.data.length; i++) {
-                    let ponto = meta.data[i];
-                    let valor = dados[i];
-
-                    if (chart.config.type == "line") {
-                        ctx.fillText(valor, ponto.x - 6, ponto.y - 12);
-                    } else if (chart.config.type == "bar" && chart.options.indexAxis == "y") {
-                        ctx.fillText(valor, ponto.x + 8, ponto.y + 4);
-                    } else {
-                        ctx.fillText(valor, ponto.x - 6, ponto.y - 10);
-                    }
-                }
-
-                ctx.restore();
-            }
-        };
-
         // Busca da API em estilo simples com .then/.catch.
         // Em caso de erro, chama a função de erro específica de cada bloco.
         function buscarJSON(url, aoSucesso, aoErro) {
-            fetch(url, { cache: "no-store" })
+            fetch(url) // aqui removemos o cache no-store para simplificar a função de busca
                 .then(function (resposta) {
                     if (resposta.ok) {
                         resposta.json().then(function (dados) {
@@ -164,10 +132,12 @@
 
             let labels = [];
             let valores = [];
+            let i = 0; // aqui iniciamos o índice do while para montar labels e valores
 
-            for (let i = 0; i < lista.length; i++) {
-                labels.push(lista[i].nome);
-                valores.push(Number(lista[i].total));
+            while (i < lista.length) { // aqui percorremos a lista de vertentes sem usar for
+                labels[i] = lista[i].nome; // aqui preenchemos o vetor de labels por posição
+                valores[i] = Number(lista[i].total); // aqui preenchemos o vetor de valores por posição
+                i++; // aqui avançamos para o próximo item da lista
             }
 
             if (graficoVertentesBar) {
@@ -175,9 +145,6 @@
             }
 
             let ctx = grafico_vertentes_bar.getContext("2d");
-            let gradienteRoxo = ctx.createLinearGradient(0, 0, 0, 260);
-            gradienteRoxo.addColorStop(0, "#B35CFF");
-            gradienteRoxo.addColorStop(1, "#7A2CFF");
 
             graficoVertentesBar = new Chart(ctx, {
                 type: "bar",
@@ -185,7 +152,7 @@
                     labels: labels,
                     datasets: [{
                         data: valores,
-                        backgroundColor: gradienteRoxo,
+                        backgroundColor: "#7A2CFF", // aqui aplicamos cor sólida roxa nas barras
                         borderRadius: 8
                     }]
                 },
@@ -206,8 +173,7 @@
                             grid: { color: "rgba(120, 130, 170, 0.15)" }
                         }
                     }
-                },
-                plugins: [pluginValores]
+                }
             });
         }
 
@@ -221,25 +187,14 @@
             msg_evolucao.innerHTML = "";
 
             let mesesPt = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-            let mapa = {};
-
-            for (let i = 0; i < lista.length; i++) {
-                let chave = lista[i].ano + "-" + lista[i].mes;
-                mapa[chave] = Number(lista[i].total);
-            }
-
-            // Monta cronologicamente os últimos 6 meses, mesmo se algum mês vier sem registro
             let labels = [];
             let valores = [];
-            let hoje = new Date();
+            let i = 0; // aqui iniciamos o índice do while para montar os pontos da evolução
 
-            for (let j = 5; j >= 0; j--) {
-                let d = new Date(hoje.getFullYear(), hoje.getMonth() - j, 1);
-                let ano = d.getFullYear();
-                let mes = d.getMonth() + 1;
-                let chaveMes = ano + "-" + mes;
-                labels.push(mesesPt[d.getMonth()]);
-                valores.push(mapa[chaveMes] || 0);
+            while (i < lista.length) { // aqui percorremos a lista vinda da API sem usar for
+                labels[i] = mesesPt[Number(lista[i].mes) - 1]; // aqui montamos o label direto pelo mês retornado pela API
+                valores[i] = Number(lista[i].total); // aqui montamos o valor direto da API por posição
+                i++; // aqui avançamos para o próximo mês retornado
             }
 
             if (graficoEvolucaoLinha) {
@@ -247,9 +202,6 @@
             }
 
             let ctx = grafico_evolucao_linha.getContext("2d");
-            let gradienteCiano = ctx.createLinearGradient(0, 0, 0, 260);
-            gradienteCiano.addColorStop(0, "rgba(0, 229, 255, 0.28)");
-            gradienteCiano.addColorStop(1, "rgba(0, 229, 255, 0)");
 
             graficoEvolucaoLinha = new Chart(ctx, {
                 type: "line",
@@ -257,9 +209,9 @@
                     labels: labels,
                     datasets: [{
                         data: valores,
-                        borderColor: "#00E5FF",
-                        backgroundColor: gradienteCiano,
-                        fill: true,
+                        borderColor: "#00E5FF", // aqui aplicamos cor sólida ciano na linha
+                        backgroundColor: "#00E5FF", // aqui deixamos a cor sólida do dataset sem gradiente
+                        fill: false, // aqui removemos o preenchimento em área para simplificar
                         tension: 0.35,
                         pointRadius: 5,
                         pointHoverRadius: 6,
@@ -283,8 +235,7 @@
                             grid: { color: "rgba(120, 130, 170, 0.15)" }
                         }
                     }
-                },
-                plugins: [pluginValores]
+                }
             });
         }
 
@@ -299,10 +250,12 @@
 
             let labels = [];
             let valores = [];
+            let i = 0; // aqui iniciamos o índice do while para montar o top produtores
 
-            for (let i = 0; i < lista.length; i++) {
-                labels.push(lista[i].nome);
-                valores.push(Number(lista[i].total));
+            while (i < lista.length) { // aqui percorremos o ranking de produtores sem usar for
+                labels[i] = lista[i].nome; // aqui preenchemos o vetor de labels por posição
+                valores[i] = Number(lista[i].total); // aqui preenchemos o vetor de valores por posição
+                i++; // aqui avançamos para o próximo produtor
             }
 
             if (graficoTopProdutores) {
@@ -338,8 +291,7 @@
                             grid: { color: "rgba(120, 130, 170, 0.08)" }
                         }
                     }
-                },
-                plugins: [pluginValores]
+                }
             });
         }
 

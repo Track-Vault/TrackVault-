@@ -77,10 +77,8 @@
         }
 
         function carregarVertentes() { // aqui chamamos a rota que devolve todas as vertentes cadastradas
-            fetch("/painel/vertentes", { // aqui fazemos a requisição GET de vertentes
-                method: "GET", // aqui definimos o método GET para consulta
-                cache: "no-store" // aqui evitamos cache para sempre trazer dados atualizados
-            }).then(function (resposta) { // aqui tratamos a resposta da API de vertentes
+            fetch("/painel/vertentes") // aqui fazemos a requisição GET de vertentes sem opções extras
+                .then(function (resposta) { // aqui tratamos a resposta da API de vertentes
                 if (resposta.ok) { // aqui verificamos se a resposta veio com sucesso
                     resposta.json().then(function (lista) { // aqui convertemos a resposta para JSON
                         let htmlOpcoes = "<option value=\"\">Selecione a vertente</option>"; // aqui criamos a primeira opção do select
@@ -109,10 +107,8 @@
                 return; // aqui interrompemos a função quando a sessão está inválida
             }
 
-            fetch("/painel/minhas-tracks/" + idUsuario, { // aqui chamamos a rota que devolve as tracks do usuário
-                method: "GET", // aqui usamos GET para consulta
-                cache: "no-store" // aqui desativamos cache para refletir novos cadastros
-            }).then(function (resposta) { // aqui tratamos a resposta da API de tracks
+            fetch("/painel/minhas-tracks/" + idUsuario) // aqui chamamos a rota de tracks do usuário sem opções extras
+                .then(function (resposta) { // aqui tratamos a resposta da API de tracks
                 if (resposta.ok) { // aqui verificamos se a rota retornou sucesso
                     resposta.json().then(function (lista) { // aqui transformamos o retorno em JSON
                         let htmlLista = ""; // aqui iniciamos o HTML que irá montar os cards

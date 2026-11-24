@@ -6,11 +6,6 @@
 
 USE trackvault;
 
--- 2) Vertentes base (somente as que não existem no script-tabelas.sql). -- aqui ajustamos para evitar conflito de nome UNIQUE
-INSERT INTO vertente (nome, descricao) VALUES
-('Full-On', 'Vertente de música eletrônica'), -- aqui mantemos apenas a vertente Full-On nesta seção
-('Forest', 'Vertente de música eletrônica'); -- aqui mantemos apenas a vertente Forest nesta seção
-
 -- 3) Produtores base (mínimo 5 para o ranking).
 INSERT INTO produtor (nome) VALUES
 ('Charlotte de Witte'),

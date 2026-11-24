@@ -126,20 +126,6 @@ function emAlta() {
     return database.executar(instrucaoSql);
 }
 
-// Últimas tracks cadastradas (mais recente primeiro)
-function ultimas() {
-    let instrucaoSql = `
-        SELECT t.id_track AS id, t.nome AS track, p.nome AS produtor, v.nome AS vertente,
-               t.link, t.data_cadastro
-        FROM track t
-        JOIN produtor p ON p.id_produtor = t.fk_produtor
-        JOIN vertente v ON v.id_vertente = t.fk_vertente
-        ORDER BY t.data_cadastro DESC
-        LIMIT 5;
-    `;
-    return database.executar(instrucaoSql);
-}
-
 // Produtores com mais tracks no catálogo
 function topProdutores() {
     let instrucaoSql = `
@@ -212,7 +198,6 @@ module.exports = {
     minhasTracks,
     cadastrarTrack,
     emAlta,
-    ultimas,
     topProdutores,
     produtoresAcessados,
     porVertente,

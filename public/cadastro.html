@@ -127,16 +127,16 @@
           }, 2000);
           finalizarAguardar();
         } else {
-          return resposta.json().then(function (msg) {
-            throw msg;
+          resposta.json().then(function (msg) { // aqui lemos a mensagem de erro devolvida pela API
+            mostrarMensagem(msg); // aqui mostramos a mensagem recebida no alerta da tela
+            finalizarAguardar(); // aqui encerramos o loading mesmo com erro da API
           });
         }
       })
       .catch(function (erro) {
-       
- console.log("#ERRO: " + erro);
-        mostrarMensagem(typeof erro == "string" ? erro : "Houve um erro ao tentar realizar o cadastro!");
-        finalizarAguardar();
+        console.log("#ERRO: " + erro); // aqui mantemos o log técnico no console para apoio
+        mostrarMensagem("Houve um erro ao tentar realizar o cadastro!"); // aqui exibimos mensagem padrão para erro de conexão
+        finalizarAguardar(); // aqui encerramos o loading no erro de conexão
       });
     return false;
   }

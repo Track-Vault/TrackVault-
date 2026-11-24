@@ -14,10 +14,6 @@ router.get("/em-alta", function (req, res) {
     painelController.emAlta(req, res);
 });
 
-router.get("/ultimas", function (req, res) {
-    painelController.ultimas(req, res);
-});
-
 router.get("/top-produtores", function (req, res) {
     painelController.topProdutores(req, res);
 });
